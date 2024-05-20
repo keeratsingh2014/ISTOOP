@@ -39,7 +39,7 @@ class Game():
         pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 390, 715, 140))
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(390, 20, 345, 350))
         pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(390, 20, 345, 40))
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((player.player_location(player)["x"], player.player_location(player)["y"]), (50, 50)))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((player.player_location(self)["x"], player.player_location(self)["y"]), (50, 50)))
 
         self.inventory_buttons()
         pygame.display.update()
@@ -49,13 +49,13 @@ class Game():
 
         user_input = input("Enter: ")
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "up"):
-            player.player_movement(player, "y", 20)
+            player.player_movement(self, "y", 20)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "down"):
-            player.player_movement(player, "y", -20)
+            player.player_movement(self, "y", -20)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "right"):
-            player.player_movement(player, "x", 20)
+            player.player_movement(self, "x", 20)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "left"):
-            player.player_movement(player, "x", -20)
+            player.player_movement(self, "x", -20)
 
 
     
