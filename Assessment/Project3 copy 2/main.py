@@ -1,6 +1,7 @@
 import pygame
 import button
 import player
+import map
 from sys import exit
 
 
@@ -94,6 +95,6 @@ class Main():
 
     
 game = Main("Mygame", 60, (755, 550))
-user = player.Player("Bob", {"x":0, "y":0}, {"HP":1, "DMG":1})
+user = player.Player("Bob", {"x": 0, "y": 0}, {"HP":1, "DMG":1})
 game.run()
 

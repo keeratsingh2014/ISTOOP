@@ -15,10 +15,6 @@ class Player():
     def player_location(self):
         return self.location
 
-    def player_map(self):
-        print("")
-    # place
-
     def player_stats(self):
         pass
 
