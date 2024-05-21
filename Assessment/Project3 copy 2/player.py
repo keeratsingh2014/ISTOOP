@@ -21,7 +21,4 @@ class Player():
     def player_inventory(self):
         pass
 
-
-
-
-user = Player("Bob", {"x":0, "y":0}, {"HP":1, "DMG":1})
+# jeron shush
