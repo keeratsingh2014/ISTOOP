@@ -4,6 +4,7 @@ class Player():
         self.location = location
         self.stats = stats
         # self.inventory = {}
+        self.map = None
         self.sprite = None
         # self.progress = None
     
@@ -13,12 +14,18 @@ class Player():
 
     def player_location(self):
         return self.location
-    
+
+    def player_map(self):
+        print("")
+    # place
+
     def player_stats(self):
         pass
 
     def player_inventory(self):
         pass
+
+
 
 
 user = Player("Bob", {"x":0, "y":0}, {"HP":1, "DMG":1})

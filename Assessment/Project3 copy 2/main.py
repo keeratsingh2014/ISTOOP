@@ -55,11 +55,11 @@ class Main():
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "up"):
             player.Player.player_movement(user, "y", 20)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "down"):
-            player.usr.Player.player_movement(user, "y", -20)
+            player.Player.player_movement(user, "y", -20)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "right"):
-            player.usr.Player.player_movement(user, "x", 20)
+            player.Player.player_movement(user, "x", 20)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "left"):
-            player.usr.Player.player_movement(user, "x", -20)
+            player.Player.player_movement(user, "x", -20)
 
 
     
