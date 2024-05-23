@@ -41,10 +41,11 @@ class Main():
     def update(self):
         self.screen.blit(self.BG, (0,0))
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(20, 20, 350, 350))
+        self.screen.blit(self.map, (20, 20))
         pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 390, 715, 140))
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(390, 20, 345, 350))
         pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(390, 20, 345, 40))
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((player.Player.player_location(user)[0], player.Player.player_location(user)[1]), (50, 50)))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 40, user.player_location()[1] + 40), (10, 10)))
         self.inventory_buttons()
         pygame.display.update()
         self.control()
@@ -53,15 +54,15 @@ class Main():
 
         user_input = input("Enter: ")
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "up"):
-            player.Player.player_movement(user, 1, 20)
+            user.player_movement(1, -50)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "down"):
-            player.Player.player_movement(user, 1, -20)
+            user.player_movement(1, 50)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "right"):
-            player.Player.player_movement(user, 0, 20)
+            user.player_movement(0, 50)
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "left"):
-            player.Player.player_movement(user, 0, -20)
+            user.player_movement(0, -50)
         if user_input == "look":
-            map.map.locations(player.Player.player_location(user))
+            map.world.locations(user.player_location())
         
 
 
@@ -71,6 +72,8 @@ class Main():
         self.button2 = pygame.image.load("Images/JustBg.png").convert_alpha()
         self.button3 = pygame.image.load("images/JustBg.png").convert_alpha()
         self.BG = pygame.image.load("images/BG.png").convert_alpha()
+        self.map = pygame.image.load("images/mapschematic.png").convert_alpha()
+        self.map = pygame.transform.scale(self.map, (350, 350))
         self.button1 = button.Button(390, 20, self.button1, 1)
         self.button2 = button.Button(505, 20, self.button2, 1)
         self.button3 = button.Button(620, 20, self.button3, 1)
@@ -97,6 +100,6 @@ class Main():
 
     
 game = Main("Mygame", 60, (755, 550))
-user = player.Player("Bob", (0, 0), {"HP":1, "DMG":1})
+user = player.Player("Bob", [0, 0], {"HP":1, "DMG":1})
 game.run()
 

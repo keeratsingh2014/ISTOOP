@@ -1,5 +1,5 @@
 mainWorldLocations = {
-    (0,0): {"name": "", "desc": "", "interactables": ""},
+    (0,0): {"name": "SHUSH", "desc": "NDDIN", "interactables": "YOURMOM"},
     (0,0): {"name": "", "desc": "", "interactables": ""},
     (0,0): {"name": "", "desc": "", "interactables": ""},
     (0,0): {"name": "", "desc": "", "interactables": ""},
@@ -24,4 +24,4 @@ class Map():
             pass
 
 
-world = Map("shsuh", mainWorldLocations)
+world = Map("shush", mainWorldLocations)
