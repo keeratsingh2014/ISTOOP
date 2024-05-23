@@ -62,7 +62,7 @@ class Main():
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "left"):
             user.player_movement(0, -50)
         if user_input == "look":
-            map.world.locations(user.player_location())
+            print(map.world.locations[tuple(user.player_location())]["desc"])
         
 
 
@@ -100,6 +100,6 @@ class Main():
 
     
 game = Main("Mygame", 60, (755, 550))
-user = player.Player("Bob", [0, 0], {"HP":1, "DMG":1})
+user = player.Player("Bob", [150, 300], {"HP":1, "DMG":1}, map.world)
 game.run()
 

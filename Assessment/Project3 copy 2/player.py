@@ -1,16 +1,22 @@
+
 class Player():
-    def __init__(self, name, location, stats):
+    def __init__(self, name, location, stats, map):
         self.name = name
         self.location = location
         self.stats = stats
         # self.inventory = {}
-        self.map = None
+        self.map = map
         self.sprite = None
         # self.progress = None
     
     def player_movement(self, direction, magnitude):
-        self.location[direction] += magnitude
-        print(self.location)
+        try:
+            self.location[direction] += magnitude
+            print(self.location)
+            print(self.map.locations[tuple(self.location)])
+        except:
+            self.location[direction] -= magnitude
+
 
     def player_location(self):
         return self.location
