@@ -14,7 +14,8 @@ class Main():
         self.screen = None
         self.clock = None
         self.output = ""
-        self.prompt = ""
+        self.input = ""
+        self.lastCmd = ""
 
     def initialise(self):
         pygame.init()
@@ -41,17 +42,16 @@ class Main():
             if event.type == pygame.QUIT:
                 self.is_running = False
             if event.type == pygame.KEYDOWN:
-                print(event.unicode)
-                
-                if 65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122:
-                    self.prompt += event.unicode
+                if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122):
+                    self.input += event.unicode
                 elif event.key == pygame.K_BACKSPACE:
-                    self.prompt = self.prompt[:-1]
+                    self.input = self.input[:-1]
                 elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN):
                     self.control()
-                    self.prompt = ""
+                    self.lastCmd = self.input
+                    self.input = ""
                 elif event.key == pygame.K_SPACE:
-                    self.prompt += " " if self.prompt[-1]!= " " else ""
+                    self.input += " " if self.input[-1]!= " " else ""
 
     def update(self):
         self.screen.blit(self.BG, (0,0))
@@ -63,25 +63,25 @@ class Main():
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 40, user.player_location()[1] + 40), (10, 10)))
         #self.inventory_buttons()
         self.typing()
-        self.render_text(self.output)
+        self.render_text(self.output, self.lastCmd)
         pygame.display.update()
 
     def typing(self):
-        text = self.font.render(self.prompt, True, (0,0,0))
+        text = self.font.render(self.input, True, (0,0,0))
         rect = text.get_rect()
         rect.left, rect.centery =  400, 350 
         self.screen.blit(text, rect)
     
     def control(self):
-        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "up"):
+        if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
             user.player_movement(1, -50)
-        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "down"):
+        if (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
             user.player_movement(1, 50)
-        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "right"):
+        if (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
             user.player_movement(0, 50)
-        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "left"):
+        if (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
             user.player_movement(0, -50)
-        if self.prompt == "look":
+        if self.input == "look":
             self.output = map.world.locations[tuple(user.player_location())]["desc"]
         
         
@@ -122,7 +122,7 @@ class Main():
             self.var2 = False
             print("menu3")
 
-    def render_text(self, text):
+    def render_text(self, text, cmd):
         textArray = text.split(" ")
         currentIndex = 0
         while currentIndex != len(textArray) - 1:
@@ -131,11 +131,17 @@ class Main():
                 textArray.pop(currentIndex + 1)
             else:
                 currentIndex += 1
+
         for i in textArray:
             text = self.font.render(i, True, (0,0,0))
             rect = text.get_rect()
             rect.topleft = (400, 30 + 20 * textArray.index(i))
             self.screen.blit(text, rect)
+
+        cmd = self.font.render(cmd, True, (255,0,0))
+        cmdRect = cmd.get_rect()
+        cmdRect.topleft = (400, 40 + 20 * len(textArray))
+        self.screen.blit(cmd, cmdRect)
         return textArray
 
 game = Main("Mygame", 60, (755, 550))
