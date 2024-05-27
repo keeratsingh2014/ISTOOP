@@ -13,6 +13,7 @@ class Main():
         self.is_running = False
         self.screen = None
         self.clock = None
+        self.output = ""
 
     def initialise(self):
         pygame.init()
@@ -20,6 +21,7 @@ class Main():
         pygame.display.set_caption(self.title)
         self.clock = pygame.time.Clock()
         self.is_running = True
+        self.font = pygame.font.SysFont(None, 20)
 
     def run(self):
         self.initialise()
@@ -40,18 +42,18 @@ class Main():
 
     def update(self):
         self.screen.blit(self.BG, (0,0))
-        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(20, 20, 350, 350))
+        #pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(20, 20, 350, 350))
         self.screen.blit(self.map, (20, 20))
         pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 390, 715, 140))
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(390, 20, 345, 350))
         pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(390, 20, 345, 40))
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 40, user.player_location()[1] + 40), (10, 10)))
         self.inventory_buttons()
+        self.render_text(self.output)
         pygame.display.update()
         self.control()
 
     def control(self):
-
         user_input = input("Enter: ")
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "up"):
             user.player_movement(1, -50)
@@ -62,10 +64,7 @@ class Main():
         if (user_input.split()[0] == "move") and (user_input.split()[1] == "left"):
             user.player_movement(0, -50)
         if user_input == "look":
-            print(map.world.locations[tuple(user.player_location())]["desc"])
-        
-
-
+            self.output = map.world.locations[tuple(user.player_location())]["desc"]
     
     def render(self):
         self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
@@ -98,7 +97,22 @@ class Main():
             self.var2 = False
             print("menu3")
 
-    
+    def render_text(self, text):
+        textArray = text.split(" ")
+        currentIndex = 0
+        while currentIndex != len(textArray) - 1:
+            if self.font.render(f"{textArray[currentIndex]} {textArray[currentIndex + 1]}", True, (0,0,0)).get_rect().width <= 325:
+                textArray[currentIndex] += f" {textArray[currentIndex + 1]}"
+                textArray.pop(currentIndex + 1)
+            else:
+                currentIndex += 1
+        for i in textArray:
+            text = self.font.render(i, True, (0,0,0))
+            rect = text.get_rect()
+            rect.topleft = (400, 70 + 20 * textArray.index(i))
+            self.screen.blit(text, rect)
+        return textArray
+
 game = Main("Mygame", 60, (755, 550))
 user = player.Player("Bob", [150, 300], {"HP":1, "DMG":1}, map.world)
 game.run()
