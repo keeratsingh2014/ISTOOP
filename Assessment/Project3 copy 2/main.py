@@ -14,6 +14,7 @@ class Main():
         self.screen = None
         self.clock = None
         self.output = ""
+        self.prompt = ""
 
     def initialise(self):
         pygame.init()
@@ -39,40 +40,57 @@ class Main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_running = False
+            if event.type == pygame.KEYDOWN:
+                print(event.unicode)
+                
+                if 65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122:
+                    self.prompt += event.unicode
+                elif event.key == pygame.K_BACKSPACE:
+                    self.prompt = self.prompt[:-1]
+                elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN):
+                    self.control()
+                    self.prompt = ""
+                elif event.key == pygame.K_SPACE:
+                    self.prompt += " " if self.prompt[-1]!= " " else ""
 
     def update(self):
         self.screen.blit(self.BG, (0,0))
         #pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(20, 20, 350, 350))
-        self.screen.blit(self.map, (20, 20))
-        pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 390, 715, 140))
-        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(390, 20, 345, 350))
-        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(390, 20, 345, 40))
+        self.screen.blit(self.map, (20, 20)) # map
+        pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 390, 715, 140)) # menu/bag
+        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(390, 20, 345, 310)) # prompt space
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(390, 330, 345, 40)) # input box
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 40, user.player_location()[1] + 40), (10, 10)))
-        self.inventory_buttons()
+        #self.inventory_buttons()
+        self.typing()
         self.render_text(self.output)
         pygame.display.update()
-        self.control()
 
+    def typing(self):
+        text = self.font.render(self.prompt, True, (0,0,0))
+        rect = text.get_rect()
+        rect.left, rect.centery =  400, 350 
+        self.screen.blit(text, rect)
+    
     def control(self):
-        user_input = input("Enter: ")
-        if (user_input.split()[0] == "move") and (user_input.split()[1] == "up"):
+        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "up"):
             user.player_movement(1, -50)
-        if (user_input.split()[0] == "move") and (user_input.split()[1] == "down"):
+        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "down"):
             user.player_movement(1, 50)
-        if (user_input.split()[0] == "move") and (user_input.split()[1] == "right"):
+        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "right"):
             user.player_movement(0, 50)
-        if (user_input.split()[0] == "move") and (user_input.split()[1] == "left"):
+        if (self.prompt.split()[0] == "move") and (self.prompt.split()[1] == "left"):
             user.player_movement(0, -50)
-        if user_input == "look":
+        if self.prompt == "look":
             self.output = map.world.locations[tuple(user.player_location())]["desc"]
-
-        try:
-            self.map = map.world.check(user.player_location())
-        except:
-            self.map = "images/mapschematic.png"
+        
+        
+        self.map = map.world.check(tuple(user.player_location()))
+        self.map = "images/mapschematic.png" if self.map == "" else self.map
         self.map = pygame.image.load(self.map).convert_alpha()
         self.map = pygame.transform.scale(self.map, (350, 350))
         
+    
     def render(self):
         self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
         self.button2 = pygame.image.load("Images/JustBg.png").convert_alpha()
@@ -116,7 +134,7 @@ class Main():
         for i in textArray:
             text = self.font.render(i, True, (0,0,0))
             rect = text.get_rect()
-            rect.topleft = (400, 70 + 20 * textArray.index(i))
+            rect.topleft = (400, 30 + 20 * textArray.index(i))
             self.screen.blit(text, rect)
         return textArray
 
