@@ -17,9 +17,11 @@ class Player():
         except:
             self.location[direction] -= magnitude
 
-
     def player_location(self):
         return self.location
+    
+    def spawn(self, location):
+        self.location = location
 
     def player_stats(self):
         pass
