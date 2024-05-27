@@ -21,7 +21,7 @@ class Main():
         pygame.display.set_caption(self.title)
         self.clock = pygame.time.Clock()
         self.is_running = True
-        self.font = pygame.font.SysFont(None, 20)
+        self.font = pygame.font.SysFont("alefregular", 20)
 
     def run(self):
         self.initialise()
@@ -65,7 +65,14 @@ class Main():
             user.player_movement(0, -50)
         if user_input == "look":
             self.output = map.world.locations[tuple(user.player_location())]["desc"]
-    
+
+        try:
+            self.map = map.world.check(user.player_location())
+        except:
+            self.map = "images/mapschematic.png"
+        self.map = pygame.image.load(self.map).convert_alpha()
+        self.map = pygame.transform.scale(self.map, (350, 350))
+        
     def render(self):
         self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
         self.button2 = pygame.image.load("Images/JustBg.png").convert_alpha()
