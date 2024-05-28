@@ -4,7 +4,7 @@ class Player():
         self.name = name
         self.location = location
         self.stats = stats
-        self.inventory = {"weapon": [], "strength": [], "regen": [], "health": []}
+        self.inventory = {"weapon": [], "strength": [], "accuracy": [], "health": []}
         self.map = map
         self.sprite = None
         # self.progress = None
@@ -28,6 +28,8 @@ class Player():
 
     def player_inventory_add(self, type, item):
         self.inventory[type].insert(0, item)
+    
+
 
 
 # jeron shush
