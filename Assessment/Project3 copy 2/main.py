@@ -59,10 +59,10 @@ class Main():
         self.screen.blit(self.BG, (0,0))
         #pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(20, 20, 350, 350))
         self.screen.blit(self.map, (20, 20)) # map
-        pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 390, 715, 140)) # menu/bag
-        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(390, 20, 345, 310)) # prompt space
-        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(390, 330, 345, 40)) # input box
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 40, user.player_location()[1] + 40), (10, 10)))
+        pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 460, 785, 140)) # menu/bag
+        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(460, 20, 345, 380)) # prompt space
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(460, 400, 345, 40)) # input box
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 45, user.player_location()[1] + 45), (10, 10)))
         #self.inventory_buttons()
         self.typing()
         self.render_text(self.output, self.lastCmd)
@@ -71,18 +71,18 @@ class Main():
     def typing(self):
         text = self.font.render(self.input, True, (0,0,0))
         rect = text.get_rect()
-        rect.topleft =  (400, 336)
+        rect.topleft =  (470, 406)
         self.screen.blit(text, rect)
     
     def control(self):
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
-            user.player_movement(1, -50)
+            user.player_movement(1, -60)
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
-            user.player_movement(1, 50)
+            user.player_movement(1, 60)
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
-            user.player_movement(0, 50)
+            user.player_movement(0, 60)
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
-            user.player_movement(0, -50)
+            user.player_movement(0, -60)
         if self.input == "look":
             self.output = map.world.locations[tuple(user.player_location())]["desc"]
         
@@ -90,7 +90,7 @@ class Main():
         self.map = map.world.check(tuple(user.player_location()))
         self.map = "images/mapschematic.png" if self.map == "" else self.map
         self.map = pygame.image.load(self.map).convert_alpha()
-        self.map = pygame.transform.scale(self.map, (350, 350))
+        self.map = pygame.transform.scale(self.map, (420, 420))
         
     
     def render(self):
@@ -98,8 +98,9 @@ class Main():
         self.button2 = pygame.image.load("Images/JustBg.png").convert_alpha()
         self.button3 = pygame.image.load("images/JustBg.png").convert_alpha()
         self.BG = pygame.image.load("images/BG.png").convert_alpha()
+        self.BG = pygame.transform.scale(self.BG, self.dimensions)
         self.map = pygame.image.load("images/mapschematic.png").convert_alpha()
-        self.map = pygame.transform.scale(self.map, (350, 350))
+        self.map = pygame.transform.scale(self.map, (420, 420))
         self.button1 = button.Button(390, 20, self.button1, 1)
         self.button2 = button.Button(505, 20, self.button2, 1)
         self.button3 = button.Button(620, 20, self.button3, 1)
@@ -137,17 +138,16 @@ class Main():
         for i in textArray:
             text = self.font.render(i, True, (0,0,0))
             rect = text.get_rect()
-            rect.topleft = (400, 30 + 20 * textArray.index(i))
+            rect.topleft = (470, 30 + 20 * textArray.index(i))
             self.screen.blit(text, rect)
 
         cmd = self.font.render(cmd, True, (255,0,0))
         cmdRect = cmd.get_rect()
-        cmdRect.topleft = (400, 40 + 20 * len(textArray))
+        cmdRect.topleft = (470, 40 + 20 * len(textArray))
         self.screen.blit(cmd, cmdRect)
         return textArray
 
-map.world.locations[(200, 300)]["desc"] = "aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa"
-game = Main("Mygame", 60, (755, 550))
-user = player.Player("Bob", [150, 300], {"HP":1, "DMG":1}, map.world)
+game = Main("Mygame", 60, (825, 620))
+user = player.Player("Bob", [180, 360], {"HP":1, "DMG":1}, map.world)
 game.run()
 

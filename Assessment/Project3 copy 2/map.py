@@ -1,35 +1,34 @@
 mainWorldLocations = {
-    (0, 300): {"name": "", "desc": "aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa", "interactables": "", "map": "images/location.png"},
-    (50, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (100, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (150, 300): {"name": "start", "desc": "Welcome to the beginning", "interactables": "", "map": ""},
-    (200, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (200, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (250, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (300, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (0, 360): {"name": "", "desc": "aaaaa", "interactables": "", "map": "images/location.png"},
+    (60, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (120, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (180, 360): {"name": "start", "desc": "Welcome to the beginning", "interactables": "", "map": ""},
+    (240, 360): {"name": "", "desc": "aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa", "interactables": "", "map": ""},
+    (300, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (360, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
 
-    (0, 250): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (50, 250): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (250, 250): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (300, 250): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (0, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (60, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (300, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (360, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
     
-    (0, 200): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (50, 200): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (100, 200): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (300, 200): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (0, 240): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (60, 240): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (120, 240): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (360, 240): {"name": "", "desc": "", "interactables": "", "map": ""},
     
-    (100, 150): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (150, 150): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (200, 150): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (250, 150): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (300, 150): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (120, 180): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (180, 180): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (240, 180): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (300, 180): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (360, 180): {"name": "", "desc": "", "interactables": "", "map": ""},
     
-    (150, 100): {"name": "", "desc": "", "interactables": "", "map": ""},
-    (200, 100): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (180, 120): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (240, 120): {"name": "", "desc": "", "interactables": "", "map": ""},
     
-    (150, 50): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (180, 60): {"name": "", "desc": "", "interactables": "", "map": ""},
     
-    (150, 0): {"name": "", "desc": "", "interactables": "", "map": ""},
+    (180, 0): {"name": "", "desc": "", "interactables": "", "map": ""},
 
 }
 
@@ -44,10 +43,9 @@ class Map():
             return mainWorldLocations[location]
         except:
             return False
-    
+        
     def check(self, location):
-        if location in mainWorldLocations:
-            return mainWorldLocations[location]["map"]
+        return mainWorldLocations[location]["map"]
 
 
 world = Map("shsuh", mainWorldLocations)
