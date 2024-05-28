@@ -1,5 +1,5 @@
 mainWorldLocations = {
-    (0, 300): {"name": "", "desc": "aaaaa", "interactables": "", "map": "images/location.png"},
+    (0, 300): {"name": "", "desc": "aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa", "interactables": "", "map": "images/location.png"},
     (50, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
     (100, 300): {"name": "", "desc": "", "interactables": "", "map": ""},
     (150, 300): {"name": "start", "desc": "Welcome to the beginning", "interactables": "", "map": ""},

@@ -41,9 +41,11 @@ class Main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_running = False
+
             if event.type == pygame.KEYDOWN:
                 if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122):
-                    self.input += event.unicode
+                    self.input += event.unicode if (
+                        self.font.render(self.input + event.unicode, True, (0,0,0)).get_rect().width <= 325) else ""
                 elif event.key == pygame.K_BACKSPACE:
                     self.input = self.input[:-1]
                 elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN):
@@ -63,37 +65,30 @@ class Main():
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 40, user.player_location()[1] + 40), (10, 10)))
         #self.inventory_buttons()
         self.typing()
-        self.distance = 50
         self.render_text(self.output, self.lastCmd)
         pygame.display.update()
 
     def typing(self):
         text = self.font.render(self.input, True, (0,0,0))
         rect = text.get_rect()
-        rect.left, rect.centery =  400, 350 
+        rect.topleft =  (400, 336)
         self.screen.blit(text, rect)
     
     def control(self):
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
-            user.player_movement(1, -self.distance)
+            user.player_movement(1, -50)
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
-            user.player_movement(1, self.distance)
+            user.player_movement(1, 50)
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
-            user.player_movement(0, self.distance)
+            user.player_movement(0, 50)
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
-            user.player_movement(0, -self.distance)
+            user.player_movement(0, -50)
         if self.input == "look":
             self.output = map.world.locations[tuple(user.player_location())]["desc"]
         
         
         self.map = map.world.check(tuple(user.player_location()))
-        if self.map == "":
-            self.map = "images/mapschematic.png"
-            self.distance = 90
-        else:
-            user.spawn((38, 38))
-            pass
-            
+        self.map = "images/mapschematic.png" if self.map == "" else self.map
         self.map = pygame.image.load(self.map).convert_alpha()
         self.map = pygame.transform.scale(self.map, (350, 350))
         
@@ -151,6 +146,7 @@ class Main():
         self.screen.blit(cmd, cmdRect)
         return textArray
 
+map.world.locations[(200, 300)]["desc"] = "aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa"
 game = Main("Mygame", 60, (755, 550))
 user = player.Player("Bob", [150, 300], {"HP":1, "DMG":1}, map.world)
 game.run()
