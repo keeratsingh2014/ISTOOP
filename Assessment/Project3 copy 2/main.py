@@ -6,10 +6,11 @@ from sys import exit
 
 
 class Main():
-    def __init__(self, title, fps, dimensions):
+    def __init__(self, title, fps, dimensions, step):
         self.dimensions = dimensions
         self.fps = fps
         self.title = title
+        self.step = step
         self.is_running = False
         self.screen = None
         self.clock = None
@@ -62,7 +63,10 @@ class Main():
         pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 460, 785, 140)) # menu/bag
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(460, 20, 345, 380)) # prompt space
         pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(460, 400, 345, 40)) # input box
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 45, user.player_location()[1] + 45), (10, 10)))
+        sprite = pygame.image.load("images/JustBg.png").convert_alpha()
+        sprite = pygame.transform.scale(sprite, (10, 10))
+        self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2))
+        #pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
         #self.inventory_buttons()
         self.typing()
         self.render_text(self.output, self.lastCmd)
@@ -76,22 +80,36 @@ class Main():
     
     def control(self):
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
-            user.player_movement(1, -60)
-        if (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
-            user.player_movement(1, 60)
-        if (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
-            user.player_movement(0, 60)
-        if (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
-            user.player_movement(0, -60)
-        if self.input == "look":
+            if user.location != [140, 0]:
+                user.player_movement(1, -self.step)
+            elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
+                user.map.stage += 1
+                print(user.map.stage)
+                user.location = [140, 280]
+        elif (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
+            user.player_movement(1, self.step)
+        elif (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
+            user.player_movement(0, self.step)
+        elif (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
+            user.player_movement(0, -self.step)
+        elif self.input == "look" and user.map == map.world:
             self.output = map.world.locations[tuple(user.player_location())]["desc"]
+
+        elif self.input == "enter" and user.map == map.world:
+            if user.map.locations[tuple(user.player_location())]["map"] != "":
+                user.map = user.map.locations[tuple(user.player_location())]["map"]
+                self.map = pygame.image.load(user.map.sprite).convert_alpha()
+                self.map = pygame.transform.scale(self.map, (420, 420))
+                user.location = [140, 280]
+                self.step = 140
         
-        
-        self.map = map.world.check(tuple(user.player_location()))
-        self.map = "images/mapschematic.png" if self.map == "" else self.map
-        self.map = pygame.image.load(self.map).convert_alpha()
-        self.map = pygame.transform.scale(self.map, (420, 420))
-        
+        elif self.input == "leave" and user.map != map.world:
+            user.location = user.map.spawn
+            user.map.stage = 1
+            user.map = user.map.parent
+            self.map = pygame.image.load(user.map.sprite).convert_alpha()
+            self.map = pygame.transform.scale(self.map, (420, 420))
+            self.step = 60        
     
     def render(self):
         self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
@@ -99,7 +117,7 @@ class Main():
         self.button3 = pygame.image.load("images/JustBg.png").convert_alpha()
         self.BG = pygame.image.load("images/BG.png").convert_alpha()
         self.BG = pygame.transform.scale(self.BG, self.dimensions)
-        self.map = pygame.image.load("images/mapschematic.png").convert_alpha()
+        self.map = pygame.image.load(user.map.sprite).convert_alpha()
         self.map = pygame.transform.scale(self.map, (420, 420))
         self.button1 = button.Button(390, 20, self.button1, 1)
         self.button2 = button.Button(505, 20, self.button2, 1)
@@ -107,6 +125,7 @@ class Main():
         self.var1 = True
         self.var2 = False
         self.var3 = False
+        map.dungeon1.initialise()
     
     def inventory_buttons(self):
         if self.button1.draw(self.screen, self.var1):
@@ -147,7 +166,7 @@ class Main():
         self.screen.blit(cmd, cmdRect)
         return textArray
 
-game = Main("Mygame", 60, (825, 620))
-user = player.Player("Bob", [180, 360], {"HP":1, "DMG":1}, map.world)
+game = Main("Mygame", 60, (825, 620), 60)
+user = player.Player("Bob", [180, 360], {"HP": 1, "DMG": 1}, map.world)
 game.run()
 
