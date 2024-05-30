@@ -14,7 +14,7 @@ class Main():
         self.is_running = False
         self.screen = None
         self.clock = None
-        self.output = ""
+        self.output = []
         self.input = ""
         self.lastCmd = ""
 
@@ -25,6 +25,8 @@ class Main():
         self.clock = pygame.time.Clock()
         self.is_running = True
         self.font = pygame.font.SysFont("alefregular", 20)
+        map.dungeon1.initialise()
+
 
     def run(self):
         self.initialise()
@@ -46,7 +48,7 @@ class Main():
             if event.type == pygame.KEYDOWN:
                 if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122):
                     self.input += event.unicode if (
-                        self.font.render(self.input + event.unicode, True, (0,0,0)).get_rect().width <= 325) else ""
+                        self.font.render("  " + self.input + event.unicode, True, (0,0,0)).get_rect().width <= 325) else ""
                 elif event.key == pygame.K_BACKSPACE:
                     self.input = self.input[:-1]
                 elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN):
@@ -63,13 +65,19 @@ class Main():
         pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 460, 785, 140)) # menu/bag
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(460, 20, 345, 380)) # prompt space
         pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(460, 400, 345, 40)) # input box
-        sprite = pygame.image.load("images/JustBg.png").convert_alpha()
-        sprite = pygame.transform.scale(sprite, (10, 10))
-        self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2))
-        #pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
+        sprite = pygame.image.load("images/playerSprite.png").convert_alpha()
+        sprite = pygame.transform.scale(sprite, (40, 40))
+        self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - sprite.get_width())/2, user.player_location()[1] + 20 + (self.step - sprite.get_width())/2))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
+        #pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((85, 85), (10, 10)))
         #self.inventory_buttons()
         self.typing()
-        self.render_text(self.output, self.lastCmd)
+        self.display_output()
+        if user.map != map.world:
+            for i in user.map.enemies:
+                if user.map.enemies[i]["stage"] == user.map.stage:
+                    self.screen.blit(user.map.enemies[i]["ref"], (i[0] + 70, i[1] + 70))
+                
         pygame.display.update()
 
     def typing(self):
@@ -79,6 +87,8 @@ class Main():
         self.screen.blit(text, rect)
     
     def control(self):
+        self.output.append(f"  {self.input}")
+
         if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
             if user.location != [140, 0]:
                 user.player_movement(1, -self.step)
@@ -93,7 +103,7 @@ class Main():
         elif (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
             user.player_movement(0, -self.step)
         elif self.input == "look" and user.map == map.world:
-            self.output = map.world.locations[tuple(user.player_location())]["desc"]
+            self.render_text(map.world.locations[tuple(user.player_location())]["desc"])
 
         elif self.input == "enter" and user.map == map.world:
             if user.map.locations[tuple(user.player_location())]["map"] != "":
@@ -110,6 +120,8 @@ class Main():
             self.map = pygame.image.load(user.map.sprite).convert_alpha()
             self.map = pygame.transform.scale(self.map, (420, 420))
             self.step = 60        
+
+        self.output.append("")
     
     def render(self):
         self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
@@ -125,7 +137,6 @@ class Main():
         self.var1 = True
         self.var2 = False
         self.var3 = False
-        map.dungeon1.initialise()
     
     def inventory_buttons(self):
         if self.button1.draw(self.screen, self.var1):
@@ -144,7 +155,7 @@ class Main():
             self.var2 = False
             print("menu3")
 
-    def render_text(self, text, cmd):
+    def render_text(self, text):
         textArray = text.split(" ")
         currentIndex = 0
         while currentIndex != len(textArray) - 1:
@@ -155,16 +166,17 @@ class Main():
                 currentIndex += 1
 
         for i in textArray:
-            text = self.font.render(i, True, (0,0,0))
-            rect = text.get_rect()
-            rect.topleft = (470, 30 + 20 * textArray.index(i))
-            self.screen.blit(text, rect)
+            self.output.append(i)
 
-        cmd = self.font.render(cmd, True, (255,0,0))
-        cmdRect = cmd.get_rect()
-        cmdRect.topleft = (470, 40 + 20 * len(textArray))
-        self.screen.blit(cmd, cmdRect)
-        return textArray
+    def display_output(self):
+        for i in range(18):
+            try:
+                text = self.font.render(self.output[-(18 - i)], True, (255, 0, 0) if "  " in self.output[-(18 - i)] else (0,0,0))
+                rect = text.get_rect()
+                rect.topleft = (470, 30 + 20 * i)
+                self.screen.blit(text, rect)
+            except:
+                pass
 
 game = Main("Mygame", 60, (825, 620), 60)
 user = player.Player("Bob", [180, 360], {"HP": 1, "DMG": 1}, map.world)

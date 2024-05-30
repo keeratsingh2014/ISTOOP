@@ -1,11 +1,13 @@
 
 class Player():
-    def __init__(self, name, location, stats, map):
+    def __init__(self, name, location, stats, levels, exp, map):
         self.name = name
         self.location = location
         self.stats = stats
-        self.inventory = {"weapon": [], "strength": [], "accuracy": [], "health": []}
+        self.inventory = {"weapon": ["mohisgay"], "strength": [], "accuracy": [], "health": []}
         self.map = map
+        self.level = levels
+        self.exp = None
         self.sprite = None
         # self.progress = None
     
@@ -25,6 +27,9 @@ class Player():
 
     def player_stats(self):
         pass
+
+    def player_level_up(self):
+        self.level += 1
 
     def player_inventory_add(self, type, item):
         self.inventory[type].insert(0, item)
