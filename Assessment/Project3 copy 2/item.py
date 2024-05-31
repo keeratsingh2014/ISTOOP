@@ -1,65 +1,59 @@
 
-weapon = [
-    {   
-        "name": "mohisgay", 
-        "moves":[
-                {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
-                {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
-            ]
+weapon = {
+    "mohisga": {   
+        [
+            {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
+        ]
     }, 
 
-    {   
-        "name": "changelater", 
-        "moves":[
-                {"name": "earfquake", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "newmagicwand", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "keeratgun", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "9/11", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
-            ]
+    "changelate": {   
+        [
+            {"name": "earfquake", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "newmagicwand", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "keeratgun", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "9/11", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
+        ]
     },     
 
-    {   
-        "name": "", 
-        "moves":[
-                {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
-            ]
+    "": {   
+        [
+            {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
+        ]
     }, 
 
-    {   
-        "name": "", 
-        "moves":[
-                {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
-            ]
+    "": {   
+        [
+            {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
+        ]
     }, 
 
-    {   
-        "name": "", 
-        "moves":[
-                {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-                {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
-            ]
+    "": {   
+        [
+            {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
+        ]
     }, 
 
-    {   
-        "name": "", 
-        "moves":[
-                {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}, 
-                {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}, 
-                {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}, 
-                {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}
-            ]
+    "": {   
+        [
+            {"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "locked": True}
+        ]
     }, 
-]
+}
         
 potion = [
     {

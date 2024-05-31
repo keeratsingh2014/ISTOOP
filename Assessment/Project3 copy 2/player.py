@@ -1,14 +1,17 @@
 
 class Player():
-    def __init__(self, name, location, stats, levels, exp, map):
+    def __init__(self, name, location, stats, levels, exp, map, souls, coins):
         self.name = name
         self.location = location
         self.stats = stats
-        self.inventory = {"weapon": ["mohisgay"], "strength": [], "accuracy": [], "health": []}
+        self.inventory = {"weapon": ["skullcrusher, hsioiofeei"], "strength": [], "accuracy": [], "health": []}
         self.map = map
         self.level = levels
         self.exp = None
         self.sprite = None
+        self.souls = souls
+        self.coins = coins
+        self.state = "roam"
         # self.progress = None
     
     def player_movement(self, direction, magnitude):
@@ -33,6 +36,16 @@ class Player():
 
     def player_inventory_add(self, type, item):
         self.inventory[type].insert(0, item)
+
+    
+    
+    def givemymoney(self, amount):
+        self.coins += amount
+    
+    def givemysouls(self, amount):
+        self.souls += amount
+    
+
     
 
 

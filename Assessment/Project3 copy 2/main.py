@@ -89,37 +89,41 @@ class Main():
     def control(self):
         self.output.append(f"  {self.input}")
 
-        if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
-            if user.location != [140, 0]:
-                user.player_movement(1, -self.step)
-            elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
-                user.map.stage += 1
-                print(user.map.stage)
-                user.location = [140, 280]
-        elif (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
-            user.player_movement(1, self.step)
-        elif (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
-            user.player_movement(0, self.step)
-        elif (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
-            user.player_movement(0, -self.step)
-        elif self.input == "look" and user.map == map.world:
-            self.render_text(map.world.locations[tuple(user.player_location())]["desc"])
+        if user.state == "roam":
+            if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
+                if user.location != [140, 0]:
+                    user.player_movement(1, -self.step)
+                elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
+                    user.map.stage += 1
+                    print(user.map.stage)
+                    user.location = [140, 280]
+            elif (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
+                user.player_movement(1, self.step)
+            elif (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
+                user.player_movement(0, self.step)
+            elif (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
+                user.player_movement(0, -self.step)
+            elif self.input == "look" and user.map == map.world:
+                self.render_text(map.world.locations[tuple(user.player_location())]["desc"])
 
-        elif self.input == "enter" and user.map == map.world:
-            if user.map.locations[tuple(user.player_location())]["map"] != "":
-                user.map = user.map.locations[tuple(user.player_location())]["map"]
+            elif self.input == "enter" and user.map == map.world:
+                if user.map.locations[tuple(user.player_location())]["map"] != "":
+                    user.map = user.map.locations[tuple(user.player_location())]["map"]
+                    self.map = pygame.image.load(user.map.sprite).convert_alpha()
+                    self.map = pygame.transform.scale(self.map, (420, 420))
+                    user.location = [140, 280]
+                    self.step = 140
+            
+            elif self.input == "leave" and user.map != map.world:
+                user.location = user.map.spawn
+                user.map.stage = 1
+                user.map = user.map.parent
                 self.map = pygame.image.load(user.map.sprite).convert_alpha()
                 self.map = pygame.transform.scale(self.map, (420, 420))
-                user.location = [140, 280]
-                self.step = 140
-        
-        elif self.input == "leave" and user.map != map.world:
-            user.location = user.map.spawn
-            user.map.stage = 1
-            user.map = user.map.parent
-            self.map = pygame.image.load(user.map.sprite).convert_alpha()
-            self.map = pygame.transform.scale(self.map, (420, 420))
-            self.step = 60        
+                self.step = 60     
+
+        elif user.state == "combat":
+            pass
 
         self.output.append("")
     
