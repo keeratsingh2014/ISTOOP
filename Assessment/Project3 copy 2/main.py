@@ -2,8 +2,10 @@ import pygame
 import button
 import player
 import map
+import time
 from sys import exit
 
+startTime = time.time()
 
 class Main():
     def __init__(self, title, fps, dimensions, step):
@@ -17,6 +19,7 @@ class Main():
         self.output = []
         self.input = ""
         self.lastCmd = ""
+        self.enemy = None
 
     def initialise(self):
         pygame.init()
@@ -46,17 +49,17 @@ class Main():
                 self.is_running = False
 
             if event.type == pygame.KEYDOWN:
-                if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122):
+                if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122 or event.unicode.isnumeric()):
                     self.input += event.unicode if (
                         self.font.render("  " + self.input + event.unicode, True, (0,0,0)).get_rect().width <= 325) else ""
                 elif event.key == pygame.K_BACKSPACE:
                     self.input = self.input[:-1]
-                elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN):
+                elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN) and (self.input != ""):
                     self.control()
                     self.lastCmd = self.input
                     self.input = ""
                 elif event.key == pygame.K_SPACE:
-                    self.input += " " if self.input[-1]!= " " else ""
+                    self.input += " " if (self.input != "" and self.input[-1]!= " ") else ""
 
     def update(self):
         self.screen.blit(self.BG, (0,0))
@@ -65,19 +68,21 @@ class Main():
         pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 460, 785, 140)) # menu/bag
         pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(460, 20, 345, 380)) # prompt space
         pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(460, 400, 345, 40)) # input box
-        sprite = pygame.image.load("images/playerSprite.png").convert_alpha()
-        sprite = pygame.transform.scale(sprite, (40, 40))
-        self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - sprite.get_width())/2, user.player_location()[1] + 20 + (self.step - sprite.get_width())/2))
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
         #pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((85, 85), (10, 10)))
         #self.inventory_buttons()
         self.typing()
         self.display_output()
+
         if user.map != map.world:
+            sprite = pygame.image.load("images/playerSprite.png").convert_alpha()
+            sprite = pygame.transform.scale(sprite, (80, 80))
+            self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - sprite.get_width())/2, user.player_location()[1] + 20 + (self.step - sprite.get_width())/2))
             for i in user.map.enemies:
-                if user.map.enemies[i]["stage"] == user.map.stage:
-                    self.screen.blit(user.map.enemies[i]["ref"], (i[0] + 70, i[1] + 70))
-                
+                if user.map.enemies[i]["stage"] == user.map.stage and user.map.enemies[i]["ref"].stats["HP"] != 0:
+                    self.screen.blit(user.map.enemies[i]["sprite"], (i[0] + 20 + (self.step - user.map.enemies[i]["sprite"].get_width())/2, i[1] + 20 + (self.step - user.map.enemies[i]["sprite"].get_width())/2))
+        else:
+            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
+        
         pygame.display.update()
 
     def typing(self):
@@ -85,24 +90,43 @@ class Main():
         rect = text.get_rect()
         rect.topleft =  (470, 406)
         self.screen.blit(text, rect)
-    
+        
+        if (time.time() - startTime) % 1.5 > 0.75:
+            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(rect.right, rect.top + 2, 2, 24))
+
+    def combat_info(self):
+        self.render_text(f"{self.enemy.name}:    {self.enemy.stats["HP"]}/{self.enemy.maxHP} HP    {self.enemy.stats["DMG"]} STR")
+        self.render_text(" ")
+        self.render_text(f"{user.name}:    {user.stats["HP"]}/{user.maxHP} HP    {user.stats["DMG"]} STR")
+        self.render_text(" ")
+        if self.enemy.stats["HP"] == 0:
+            self.render_text(f"You have successfully defeated {self.enemy.name}")
+        elif user.stats["HP"] == 0:
+            self.render_text("You have been killed, respawning at nearest checkpoint.")
+        else:
+            self.render_text("Choose an attack:")
+            for i in range(4):
+                self.render_text(f"{i+1}. {user.inventory["weapon"][0]["moves"][i]["name"]}")
+
     def control(self):
         self.output.append(f"  {self.input}")
-
+        
         if user.state == "roam":
-            if (self.input.split()[0] == "move") and (self.input.split()[1] == "up"):
-                if user.location != [140, 0]:
-                    user.player_movement(1, -self.step)
-                elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
-                    user.map.stage += 1
-                    print(user.map.stage)
-                    user.location = [140, 280]
-            elif (self.input.split()[0] == "move") and (self.input.split()[1] == "down"):
-                user.player_movement(1, self.step)
-            elif (self.input.split()[0] == "move") and (self.input.split()[1] == "right"):
-                user.player_movement(0, self.step)
-            elif (self.input.split()[0] == "move") and (self.input.split()[1] == "left"):
-                user.player_movement(0, -self.step)
+            if len(self.input.split()) > 1 and (self.input.split()[0] == "move"):
+                if (self.input.split()[1] == "up"):
+                    if user.location != [140, 0]:
+                        user.player_movement(1, -self.step)
+                    elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
+                        user.map.stage += 1
+                        print(user.map.stage)
+                        user.location = [140, 280]
+                elif (self.input.split()[1] == "down"):
+                    user.player_movement(1, self.step)
+                elif (self.input.split()[1] == "right"):
+                    user.player_movement(0, self.step)
+                elif (self.input.split()[1] == "left"):
+                    user.player_movement(0, -self.step)
+
             elif self.input == "look" and user.map == map.world:
                 self.render_text(map.world.locations[tuple(user.player_location())]["desc"])
 
@@ -115,17 +139,60 @@ class Main():
                     self.step = 140
             
             elif self.input == "leave" and user.map != map.world:
-                user.location = user.map.spawn
-                user.map.stage = 1
-                user.map = user.map.parent
-                self.map = pygame.image.load(user.map.sprite).convert_alpha()
-                self.map = pygame.transform.scale(self.map, (420, 420))
-                self.step = 60     
+                self.leave()
+
+            if user.map != map.world and user.map.check_combat(user.location.copy()) != "" and user.map.check_combat(user.location.copy()).stats["HP"] != 0:
+                self.enemy = user.map.check_combat(user.location.copy())
+                user.state = "combat"
+                self.render_text(f"You have encountered {self.enemy.name}. Get ready to start combat.")
+                self.combat_info()
 
         elif user.state == "combat":
-            pass
+            if self.input.isnumeric() and 1 <= int(self.input) <= 4:
+                enemyAttack = self.enemy.attack()
+                
+                if user.attack(int(self.input) - 1)["speed"] >= enemyAttack["speed"]:
+                    self.render_text(f"You used: {user.attack(int(self.input) - 1)["name"]}")
+                    self.enemy.handle_attack(user.attack(int(self.input) - 1), user.stats["DMG"])
+                    
+                    if self.enemy.stats["HP"] != 0:
+                        self.render_text(f"{self.enemy.name} used: {enemyAttack["name"]}")
+                        user.handle_attack(enemyAttack, self.enemy.stats["DMG"])
+                        self.render_text(" ")
 
+                else:
+                    self.render_text(f"{self.enemy.name} used: {enemyAttack["name"]}")
+                    user.handle_attack(enemyAttack, self.enemy.stats["DMG"])
+                    
+                    if user.stats["HP"] != 0:
+                        self.render_text(f"You used: {user.attack(int(self.input) - 1)["name"]}")
+                        self.enemy.handle_attack(user.attack(int(self.input) - 1), user.stats["DMG"])
+                        self.render_text(" ")
+
+                self.combat_info()
+
+                if self.enemy.stats["HP"] == 0:
+                    self.roam_state()
+                elif user.stats["HP"] == 0:
+                    self.leave()
+                    self.roam_state()
+    
         self.output.append("")
+
+    def roam_state(self):
+        user.state = "roam"
+        user.stats["HP"] = user.maxHP
+        self.enemy = None
+
+    def leave(self):
+        for i in user.map.enemies:
+            user.map.enemies[i]["ref"].stats["HP"] = user.map.enemies[i]["ref"].maxHP
+        user.location = user.map.spawn
+        user.map.stage = 1
+        user.map = user.map.parent
+        self.map = pygame.image.load(user.map.sprite).convert_alpha()
+        self.map = pygame.transform.scale(self.map, (420, 420))
+        self.step = 60
     
     def render(self):
         self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
@@ -175,7 +242,7 @@ class Main():
     def display_output(self):
         for i in range(18):
             try:
-                text = self.font.render(self.output[-(18 - i)], True, (255, 0, 0) if "  " in self.output[-(18 - i)] else (0,0,0))
+                text = self.font.render(self.output[-(18 - i)], True, (255, 0, 0) if "  " == self.output[-(18 - i)][0:2] else (0,0,0))
                 rect = text.get_rect()
                 rect.topleft = (470, 30 + 20 * i)
                 self.screen.blit(text, rect)
@@ -183,6 +250,6 @@ class Main():
                 pass
 
 game = Main("Mygame", 60, (825, 620), 60)
-user = player.Player("Bob", [180, 360], {"HP": 1, "DMG": 1}, map.world)
+user = player.Player("Bob", [180, 360], {"HP": 250, "DMG": 50}, map.world, 0,0,0,0)
 game.run()
 

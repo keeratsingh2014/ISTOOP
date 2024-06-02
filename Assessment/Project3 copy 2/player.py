@@ -1,10 +1,12 @@
+import random, item
 
 class Player():
-    def __init__(self, name, location, stats, levels, exp, map, souls, coins):
+    def __init__(self, name, location, stats, map, levels, exp, souls, coins):
         self.name = name
         self.location = location
         self.stats = stats
-        self.inventory = {"weapon": ["skullcrusher, hsioiofeei"], "strength": [], "accuracy": [], "health": []}
+        self.maxHP = stats["HP"]
+        self.inventory = {"weapon": [item.weapon[0]], "strength": [], "accuracy": [], "health": []}
         self.map = map
         self.level = levels
         self.exp = None
@@ -19,6 +21,11 @@ class Player():
             self.location[direction] += magnitude
             print(self.location)
             print(self.map.locations[tuple(self.location)])
+            try:
+                if self.map.locations[tuple(self.location)]["chest"]["stage"] == self.map.stage:
+                    self.location[direction] -= magnitude
+            except:
+                pass
         except:
             self.location[direction] -= magnitude
 
@@ -36,17 +43,20 @@ class Player():
 
     def player_inventory_add(self, type, item):
         self.inventory[type].insert(0, item)
-
-    
     
     def givemymoney(self, amount):
         self.coins += amount
     
     def givemysouls(self, amount):
         self.souls += amount
-    
 
-    
+    def handle_attack(self, attack, scaling):
+        if random.randint(0, 100) <= attack["accuracy"]:
+            self.stats["HP"] -= round((scaling ** 1/2) * (attack["dmg"] * 1/10), 2)
+            self.stats["HP"] = 0 if self.stats["HP"] < 0 else self.stats["HP"]
+
+    def attack(self, index):
+        return self.inventory["weapon"][0]["moves"][index]
 
 
 

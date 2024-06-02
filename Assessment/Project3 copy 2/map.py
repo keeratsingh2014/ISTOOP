@@ -1,9 +1,11 @@
+import pygame, enemy
+
 mainWorldPoints = {
     (0, 360): {"name": "", "desc": "aaaaa", "interactables": "", "map": ""},
     (60, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
     (120, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
     (180, 360): {"name": "start", "desc": "Welcome to the beginning", "interactables": "", "map": ""},
-    (240, 360): {"name": "", "desc": "aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa", "interactables": "", "map": ""},
+    (240, 360): {"name": "", "desc": "aaaaaaaaaaaaaaaaaaaaaaaaaa baaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaa", "interactables": "", "map": ""},
     (300, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
     (360, 360): {"name": "", "desc": "", "interactables": "", "map": ""},
 
@@ -74,11 +76,24 @@ class Location(Map):
     def initialise(self):
         for i in self.enemies:
             self.locations[i]["enemy"] = self.enemies[i]
+            self.enemies[i]["sprite"] = pygame.transform.scale(pygame.image.load(self.enemies[i]["sprite"]).convert_alpha(), (80, 80))
 
         for i in self.chests:
             self.locations[i]["chest"] = self.chests[i]
 
         self.parent.locations[tuple(self.spawn)]["map"] = self
 
+    def check_combat(self, position):
+        for i in range(2):
+            for j in range(2):
+                position[i] += 140 * (1 - 2 * j)
+                try:
+                    if self.locations[tuple(position)]["enemy"] != "" and self.stage == self.locations[tuple(position)]["enemy"]["stage"]:
+                        return self.locations[tuple(position)]["enemy"]["ref"]
+                except:
+                    pass
+                position[i] -= 140 * (1 - 2 * j)
+        return ""
+
 world = Map("images/mapschematic.png", mainWorldPoints)
-dungeon1 = Location("images/location.png", 1, 5, [0, 360], {(0, 0): {"stage": 1, "ref": "enemy1"}}, {(140, 0): {"stage": 1, "ref": "chest1"}}, world)
+dungeon1 = Location("images/location.png", 1, 5, [0, 360], {(0, 0): {"stage": 1, "ref": enemy.sampleEnemy.clone(), "sprite": enemy.sampleEnemy.sprite}}, {(140, 0): {"stage": 2, "ref": "chest1"}}, world)
