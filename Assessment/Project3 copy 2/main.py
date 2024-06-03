@@ -27,7 +27,7 @@ class Main():
         pygame.display.set_caption(self.title)
         self.clock = pygame.time.Clock()
         self.is_running = True
-        self.font = pygame.font.SysFont("alefregular", 20)
+        self.font = pygame.font.Font("Alef-Regular.ttf", 20)
         map.dungeon1.initialise()
 
 
@@ -116,17 +116,10 @@ class Main():
                 if (self.input.split()[1] == "up"):
                     if user.location != [140, 0]:
                         user.player_movement(1, -self.step)
-                    elif user.location == [140, 0]:
-                        if user.map.stage < user.map.maxStage:
-                            user.map.stage += 1
-                            print(user.map.stage)
-                            user.location = [140, 280]
-                        else:
-                            self.leave()
-
-                    if user.location == [140, 0]:
-                        self.render_text(f"You approach a door, move up once more to {"progress to the next room" if user.map.stage < user.map.maxStage else "leave this area"}")
-
+                    elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
+                        user.map.stage += 1
+                        print(user.map.stage)
+                        user.location = [140, 280]
                 elif (self.input.split()[1] == "down"):
                     user.player_movement(1, self.step)
                 elif (self.input.split()[1] == "right"):
@@ -256,6 +249,9 @@ class Main():
             except:
                 pass
 
+# WELCOME  render text
+# sword red
+# u have bought sword render text
 game = Main("Mygame", 60, (825, 620), 60)
 user = player.Player("Bob", [180, 360], {"HP": 250, "DMG": 50}, map.world, 0,0,0,0)
 game.run()
