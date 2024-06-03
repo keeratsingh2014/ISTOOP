@@ -116,10 +116,17 @@ class Main():
                 if (self.input.split()[1] == "up"):
                     if user.location != [140, 0]:
                         user.player_movement(1, -self.step)
-                    elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
-                        user.map.stage += 1
-                        print(user.map.stage)
-                        user.location = [140, 280]
+                    elif user.location == [140, 0]:
+                        if user.map.stage < user.map.maxStage:
+                            user.map.stage += 1
+                            print(user.map.stage)
+                            user.location = [140, 280]
+                        else:
+                            self.leave()
+
+                    if user.location == [140, 0]:
+                        self.render_text(f"You approach a door, move up once more to {"progress to the next room" if user.map.stage < user.map.maxStage else "leave this area"}")
+
                 elif (self.input.split()[1] == "down"):
                     user.player_movement(1, self.step)
                 elif (self.input.split()[1] == "right"):
