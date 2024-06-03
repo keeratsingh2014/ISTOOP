@@ -19,7 +19,19 @@ class Enemy():
             self.stats["HP"] -= round((scaling ** 1/2) * (attack["dmg"] * 1/10), 2)
             self.stats["HP"] = 0 if self.stats["HP"] < 0 else self.stats["HP"]
 
-sampleEnemy = Enemy("Bob", "images\playerSprite.png", {"HP": 200, "DMG": 40},
+enemy1 = Enemy("NanoStalker", "images\dungeon1enemy1.png", {"HP": 200, "DMG": 40},
+            [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
+
+enemy2 = Enemy("NanoStalker", "images\dungeon1enemy2.png", {"HP": 200, "DMG": 40},
+            [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
+            {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
+            {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
+
+enemy3 = Enemy("NanoStalker", "images\dungeon1enemy3.png", {"HP": 200, "DMG": 40},
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 

@@ -27,8 +27,8 @@ class Main():
         pygame.display.set_caption(self.title)
         self.clock = pygame.time.Clock()
         self.is_running = True
-        self.font = pygame.font.Font("Alef-Regular.ttf", 20)
-        map.dungeon1.initialise()
+        self.font = pygame.font.SysFont("alefregular", 20)
+        map.initialise_all()
 
 
     def run(self):
@@ -75,11 +75,15 @@ class Main():
 
         if user.map != map.world:
             sprite = pygame.image.load("images/playerSprite.png").convert_alpha()
-            sprite = pygame.transform.scale(sprite, (80, 80))
+            sprite = pygame.transform.scale(sprite, (120, 120))
             self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - sprite.get_width())/2, user.player_location()[1] + 20 + (self.step - sprite.get_width())/2))
             for i in user.map.enemies:
-                if user.map.enemies[i]["stage"] == user.map.stage and user.map.enemies[i]["ref"].stats["HP"] != 0:
-                    self.screen.blit(user.map.enemies[i]["sprite"], (i[0] + 20 + (self.step - user.map.enemies[i]["sprite"].get_width())/2, i[1] + 20 + (self.step - user.map.enemies[i]["sprite"].get_width())/2))
+                if i["stage"] == user.map.stage and i["ref"].stats["HP"] != 0:
+                    self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
+            
+            for i in user.map.chests:
+                if i["stage"] == user.map.stage and i["ref"].display:
+                    self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
         else:
             pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
         
@@ -113,20 +117,33 @@ class Main():
         
         if user.state == "roam":
             if len(self.input.split()) > 1 and (self.input.split()[0] == "move"):
-                if (self.input.split()[1] == "up"):
-                    if user.location != [140, 0]:
-                        user.player_movement(1, -self.step)
-                    elif user.location == [140, 0] and user.map.stage < user.map.maxStage:
+                direction = 1 if self.input.split()[1] == "up" or self.input.split()[1] == "down" else 0
+                magnitude = self.step if self.input.split()[1] == "down" or self.input.split()[1] == "right" else -self.step
+                
+                if user.location == [140, 0] and self.input.split()[1] == "up":
+                    if user.map.stage < user.map.maxStage:
                         user.map.stage += 1
                         print(user.map.stage)
                         user.location = [140, 280]
-                elif (self.input.split()[1] == "down"):
-                    user.player_movement(1, self.step)
-                elif (self.input.split()[1] == "right"):
-                    user.player_movement(0, self.step)
-                elif (self.input.split()[1] == "left"):
-                    user.player_movement(0, -self.step)
+                    else:
+                        self.leave()
+                else:
+                    if self.input.split()[1] in ["up", "down", "right", "left"]:
+                        user.player_movement(direction, magnitude)
+                        if user.location == [140, 0]:
+                            self.render_text(f"You approach a door... move up to {"continue to the next room" if user.map.stage < user.map.maxStage else "leave this area"}")
 
+                    if user.map != map.world and user.map.check_area(user.location.copy(), "enemy") != "" and user.map.check_area(user.location.copy(), "enemy").stats["HP"] != 0:
+                        self.enemy = user.map.check_area(user.location.copy(), "enemy")
+                        user.state = "combat"
+                        self.render_text(f"You have encountered {self.enemy.name}. Get ready to start combat.")
+                        self.combat_info()
+            
+            elif self.input == "open chest" and user.map != map.world and user.map.check_area(user.location.copy(), "chest") != "" and user.map.check_area(user.location.copy(), "chest").display:
+                self.render_text(f"You have encountered chest. You received {user.map.check_area(user.location.copy(), "chest").coins} coins")
+                user.givemymoney(user.map.check_area(user.location.copy(), "chest").loot())
+                print(user.coins)
+                        
             elif self.input == "look" and user.map == map.world:
                 self.render_text(map.world.locations[tuple(user.player_location())]["desc"])
 
@@ -140,12 +157,6 @@ class Main():
             
             elif self.input == "leave" and user.map != map.world:
                 self.leave()
-
-            if user.map != map.world and user.map.check_combat(user.location.copy()) != "" and user.map.check_combat(user.location.copy()).stats["HP"] != 0:
-                self.enemy = user.map.check_combat(user.location.copy())
-                user.state = "combat"
-                self.render_text(f"You have encountered {self.enemy.name}. Get ready to start combat.")
-                self.combat_info()
 
         elif user.state == "combat":
             if self.input.isnumeric() and 1 <= int(self.input) <= 4:
@@ -186,7 +197,9 @@ class Main():
 
     def leave(self):
         for i in user.map.enemies:
-            user.map.enemies[i]["ref"].stats["HP"] = user.map.enemies[i]["ref"].maxHP
+            i["ref"].stats["HP"] = i["ref"].maxHP
+        for i in user.map.chests:
+            i["ref"].display = True
         user.location = user.map.spawn
         user.map.stage = 1
         user.map = user.map.parent
@@ -249,9 +262,6 @@ class Main():
             except:
                 pass
 
-# WELCOME  render text
-# sword red
-# u have bought sword render text
 game = Main("Mygame", 60, (825, 620), 60)
 user = player.Player("Bob", [180, 360], {"HP": 250, "DMG": 50}, map.world, 0,0,0,0)
 game.run()

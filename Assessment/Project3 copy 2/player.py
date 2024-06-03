@@ -22,7 +22,8 @@ class Player():
             print(self.location)
             print(self.map.locations[tuple(self.location)])
             try:
-                if self.map.locations[tuple(self.location)]["chest"]["stage"] == self.map.stage:
+                if self.map.locations[tuple(self.location)]["chest"][[i["stage"] for i in self.map.locations[tuple(self.location)]["chest"]].index(self.map.stage)]["stage"] == self.map.stage and (
+                    self.map.locations[tuple(self.location)]["chest"][[i["stage"] for i in self.map.locations[tuple(self.location)]["chest"]].index(self.map.stage)]["ref"].display):
                     self.location[direction] -= magnitude
             except:
                 pass
