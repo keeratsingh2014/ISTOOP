@@ -8,10 +8,10 @@ class Chest():
         
     def loot(self):
         self.display = False
-        return self.coins
+        return random.randint(self.coins[0], self.coins[1])
     
     def clone(self):
         return Chest(self.sprite, self.coins)
     
-chest1 = Chest("images/dungeon1chest1.png", random.randint(4, 6))
-chest2 = Chest("images/dungeon1chest1.png", random.randint(20, 30))
+chest1 = Chest("images/dungeon1chest1.png", (4, 6))
+chest2 = Chest("images/dungeon1chest1.png", (20, 30))

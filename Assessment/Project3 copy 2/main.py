@@ -144,8 +144,9 @@ class Main():
                         self.combat_info()
             
             elif self.input == "open chest" and user.map != map.world and user.map.check_area(user.location.copy(), "chest") != "" and user.map.check_area(user.location.copy(), "chest").display:
-                self.render_text(f"You have found a chest. You received {user.map.check_area(user.location.copy(), "chest").coins} coins")
-                user.givemymoney(user.map.check_area(user.location.copy(), "chest").loot())
+                loot = user.map.check_area(user.location.copy(), "chest").loot()
+                self.render_text(f"You have found a chest. You received {loot} coins")
+                user.givemymoney(loot)
                 print(user.coins)
 
             elif self.input == "interact" and user.map != map.world and user.map.check_area(user.location.copy(), "npc") != "":
@@ -194,7 +195,9 @@ class Main():
                 self.combat_info()
 
                 if self.enemy.stats["HP"] == 0:
-                    user.givemysouls(self.enemy.souls if isinstance(self.enemy.souls, int) else random.randint(self.enemy.souls[0], self.enemy.souls[1]))
+                    soulGain = self.enemy.souls if isinstance(self.enemy.souls, int) else random.randint(self.enemy.souls[0], self.enemy.souls[1])
+                    user.givemysouls(soulGain)
+                    self.render_text(f"You earned {soulGain} souls")
                     self.roam_state()
                 elif user.stats["HP"] == 0:
                     self.leave()

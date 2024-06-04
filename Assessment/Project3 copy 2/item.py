@@ -89,4 +89,3 @@ class Item():
 
     def get_potion(self, type):
         return potion[type]
-    
