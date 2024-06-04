@@ -21,10 +21,20 @@ class Player():
             self.location[direction] += magnitude
             print(self.location)
             print(self.map.locations[tuple(self.location)])
+
             try:
-                if self.map.locations[tuple(self.location)]["chest"][[i["stage"] for i in self.map.locations[tuple(self.location)]["chest"]].index(self.map.stage)]["stage"] == self.map.stage and (
-                    self.map.locations[tuple(self.location)]["chest"][[i["stage"] for i in self.map.locations[tuple(self.location)]["chest"]].index(self.map.stage)]["ref"].display):
-                    self.location[direction] -= magnitude
+                if self.map.locations[tuple(self.location)]["chest"] != []:
+                    for i in self.map.locations[tuple(self.location)]["chest"]:
+                        if i["stage"] == self.map.stage and i["ref"].display:
+                            self.location[direction] -= magnitude
+            except:
+                pass
+
+            try:
+                if self.map.locations[tuple(self.location)]["npc"] != []:
+                    for i in self.map.locations[tuple(self.location)]["npc"]:
+                        if i["stage"] == self.map.stage:
+                            self.location[direction] -= magnitude
             except:
                 pass
         except:

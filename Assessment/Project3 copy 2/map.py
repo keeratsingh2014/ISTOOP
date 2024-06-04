@@ -1,4 +1,4 @@
-import pygame, enemy, chest
+import pygame, enemy, chest, npc
 
 mainWorldPoints = {
     (0, 360): {"name": "", "desc": "aaaaa", "interactables": "", "map": ""},
@@ -64,13 +64,27 @@ class Map():
         return mainWorldPoints[location]["map"]
 
 class Location(Map):
-    def __init__(self, sprite, stage, maxStage, spawn, enemies, chests, parent, locations = locationPoints.copy()):
-        super().__init__(sprite, locations)
+    def __init__(self, sprite, stage, maxStage, spawn, enemies, chests, npcs, parent):
+        super().__init__(sprite, locations = {
+            (0, 280): {"enemy": [], "chest": [], "npc": []},
+            (140, 280): {"enemy": [], "chest": [], "npc": []},
+            (280, 280): {"enemy": [], "chest": [], "npc": []},
+
+            (0, 140): {"enemy": [], "chest": [], "npc": []},
+            (140, 140): {"enemy": [], "chest": [], "npc": []},
+            (280, 140): {"enemy": [], "chest": [], "npc": []},
+            
+            (0, 0): {"enemy": [], "chest": [], "npc": []},
+            (140, 0): {"enemy": [], "chest": [], "npc": []},
+            (280, 0): {"enemy": [], "chest": [], "npc": []},
+        })
+
         self.stage = stage
         self.maxStage = maxStage
         self.spawn = spawn
         self.enemies = enemies
         self.chests = chests
+        self.npcs = npcs
         self.parent = parent
     
     def initialise(self):
@@ -80,6 +94,10 @@ class Location(Map):
 
         for i in self.chests:
             self.locations[i["location"]]["chest"].append(i)
+            i["sprite"] = pygame.transform.scale(pygame.image.load(i["sprite"]).convert_alpha(), i["dimensions"])
+
+        for i in self.npcs:
+            self.locations[i["location"]]["npc"].append(i)
             i["sprite"] = pygame.transform.scale(pygame.image.load(i["sprite"]).convert_alpha(), i["dimensions"])
 
         self.parent.locations[tuple(self.spawn)]["map"] = self
@@ -101,11 +119,29 @@ class Location(Map):
     
 def initialise_all():
     dungeon1.initialise()
+    dungeon2.initialise()
+    dungeon3.initialise()
+    village1.initialise()
 
 world = Map("images/mapschematic.png", mainWorldPoints)
 
-dungeon1 = Location("images/region1dungeon1.png", 1, 5, [360, 360], [{"location": (140, 0), "stage": 1, "ref": enemy.enemy1.clone(), "sprite": enemy.enemy1.sprite, "dimensions": (175, 175)},
+dungeon1 = Location("images/region1dungeon1.png", 1, 5, [240, 120], [{"location": (140, 0), "stage": 1, "ref": enemy.enemy1.clone(), "sprite": enemy.enemy1.sprite, "dimensions": (175, 175)},
                                                                    {"location": (140, 0), "stage": 3, "ref": enemy.enemy2.clone(), "sprite": enemy.enemy2.sprite, "dimensions": (175, 175)},
                                                                    {"location": (140, 0), "stage": 4, "ref": enemy.enemy3.clone(), "sprite": enemy.enemy3.sprite, "dimensions": (175, 175)}],
                                                                    [{"location": (140, 140), "stage": 2, "ref": chest.chest1.clone(), "sprite": chest.chest1.sprite, "dimensions": (140, 140)},
-                                                                    {"location": (140, 140), "stage": 5, "ref": chest.chest2.clone(), "sprite": chest.chest2.sprite, "dimensions": (140, 140)}], world)
+                                                                    {"location": (140, 140), "stage": 5, "ref": chest.chest2.clone(), "sprite": chest.chest2.sprite, "dimensions": (140, 140)}], [], world)
+
+dungeon2 = Location("images/region3dungeon1.png", 1, 5, [300, 300], [{"location": (140, 0), "stage": 1, "ref": enemy.enemy4.clone(), "sprite": enemy.enemy4.sprite, "dimensions": (175, 175)},
+                                                                   {"location": (140, 0), "stage": 3, "ref": enemy.enemy5.clone(), "sprite": enemy.enemy5.sprite, "dimensions": (175, 175)},
+                                                                   {"location": (140, 0), "stage": 4, "ref": enemy.enemy6.clone(), "sprite": enemy.enemy6.sprite, "dimensions": (175, 175)}],
+                                                                   [{"location": (140, 140), "stage": 2, "ref": chest.chest1.clone(), "sprite": chest.chest1.sprite, "dimensions": (140, 140)},
+                                                                    {"location": (140, 140), "stage": 5, "ref": chest.chest2.clone(), "sprite": chest.chest2.sprite, "dimensions": (140, 140)}], [], world)
+
+dungeon3 = Location("images/region2dungeon1.png", 1, 5, [60, 300], [{"location": (140, 0), "stage": 1, "ref": enemy.enemy7.clone(), "sprite": enemy.enemy7.sprite, "dimensions": (175, 175)},
+                                                                   {"location": (140, 0), "stage": 3, "ref": enemy.enemy8.clone(), "sprite": enemy.enemy8.sprite, "dimensions": (175, 175)},
+                                                                   {"location": (140, 0), "stage": 4, "ref": enemy.enemy9.clone(), "sprite": enemy.enemy9.sprite, "dimensions": (175, 175)}],
+                                                                   [{"location": (140, 140), "stage": 2, "ref": chest.chest1.clone(), "sprite": chest.chest1.sprite, "dimensions": (140, 140)},
+                                                                    {"location": (140, 140), "stage": 5, "ref": chest.chest2.clone(), "sprite": chest.chest2.sprite, "dimensions": (140, 140)}], [], world)
+
+village1 = Location("images/location.png", 1, 5, [180, 360], [], [], [{"location": (280, 140), "stage": 1, "ref": npc.teacher1, "sprite": npc.teacher1.sprite, "dimensions": (140, 140)},
+                                                                      {"location": (0, 140), "stage": 2, "ref": npc.shop1, "sprite": npc.shop1.sprite, "dimensions": (140, 140)}], world)

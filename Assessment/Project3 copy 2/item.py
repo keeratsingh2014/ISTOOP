@@ -13,11 +13,12 @@ weapon = [
     {
         "name": "cangelate", 
         "moves":    [
-            {"name": "earfquake", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-            {"name": "newmagicwand", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-            {"name": "keeratgun", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
-            {"name": "9/11", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}
-        ]
+            {"name": "earfquake", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True, "learnCost": 2}, 
+            {"name": "newmagicwand", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True, "learnCost": 4}, 
+            {"name": "keeratgun", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True, "learnCost": 6}, 
+            {"name": "9/11", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True, "learnCost": 8}
+        ],
+        "cost": 20
     },     
 
     {
@@ -88,3 +89,4 @@ class Item():
 
     def get_potion(self, type):
         return potion[type]
+    

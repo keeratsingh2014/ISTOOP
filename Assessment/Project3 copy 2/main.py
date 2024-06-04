@@ -1,8 +1,4 @@
-import pygame
-import button
-import player
-import map
-import time
+import pygame, button, player, map, npc, time, random
 from sys import exit
 
 startTime = time.time()
@@ -20,6 +16,7 @@ class Main():
         self.input = ""
         self.lastCmd = ""
         self.enemy = None
+        self.npc = None
 
     def initialise(self):
         pygame.init()
@@ -29,6 +26,7 @@ class Main():
         self.is_running = True
         self.font = pygame.font.SysFont("alefregular", 20)
         map.initialise_all()
+        print(map.dungeon1.locations == map.dungeon2.locations)
 
 
     def run(self):
@@ -84,6 +82,10 @@ class Main():
             for i in user.map.chests:
                 if i["stage"] == user.map.stage and i["ref"].display:
                     self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
+            
+            for i in user.map.npcs:
+                if i["stage"] == user.map.stage:
+                    self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
         else:
             pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
         
@@ -127,9 +129,11 @@ class Main():
                         user.location = [140, 280]
                     else:
                         self.leave()
+                
                 else:
                     if self.input.split()[1] in ["up", "down", "right", "left"]:
                         user.player_movement(direction, magnitude)
+                        
                         if user.location == [140, 0]:
                             self.render_text(f"You approach a door... move up to {"continue to the next room" if user.map.stage < user.map.maxStage else "leave this area"}")
 
@@ -140,10 +144,17 @@ class Main():
                         self.combat_info()
             
             elif self.input == "open chest" and user.map != map.world and user.map.check_area(user.location.copy(), "chest") != "" and user.map.check_area(user.location.copy(), "chest").display:
-                self.render_text(f"You have encountered chest. You received {user.map.check_area(user.location.copy(), "chest").coins} coins")
+                self.render_text(f"You have found a chest. You received {user.map.check_area(user.location.copy(), "chest").coins} coins")
                 user.givemymoney(user.map.check_area(user.location.copy(), "chest").loot())
                 print(user.coins)
-                        
+
+            elif self.input == "interact" and user.map != map.world and user.map.check_area(user.location.copy(), "npc") != "":
+                user.state = "talk"
+                self.npc = user.map.check_area(user.location.copy(), "npc")
+                for i in user.map.check_area(user.location.copy(), "npc").introduction():
+                    self.render_text(i)
+                self.render_text(f"You have {f"{user.souls} souls" if isinstance(self.npc, npc.Teachers) else f"{user.coins} coins"}, spend wisely...")
+
             elif self.input == "look" and user.map == map.world:
                 self.render_text(map.world.locations[tuple(user.player_location())]["desc"])
 
@@ -159,7 +170,7 @@ class Main():
                 self.leave()
 
         elif user.state == "combat":
-            if self.input.isnumeric() and 1 <= int(self.input) <= 4:
+            if self.input.isnumeric() and 1 <= int(self.input) <= 4 and not user.attack(int(self.input) - 1)["locked"]:
                 enemyAttack = self.enemy.attack()
                 
                 if user.attack(int(self.input) - 1)["speed"] >= enemyAttack["speed"]:
@@ -183,17 +194,32 @@ class Main():
                 self.combat_info()
 
                 if self.enemy.stats["HP"] == 0:
+                    user.givemysouls(self.enemy.souls if isinstance(self.enemy.souls, int) else random.randint(self.enemy.souls[0], self.enemy.souls[1]))
                     self.roam_state()
                 elif user.stats["HP"] == 0:
                     self.leave()
                     self.roam_state()
+
+            elif user.attack(int(self.input) - 1)["locked"]:
+                self.render_text("That move has not been unlocked yet, for further information about moves, use of the menu below")
+
+            else:
+                self.render_text("That does not seem to be a valid command")
     
+        elif user.state == "talk":
+            if self.input.isnumeric() and 1 <= int(self.input) <= len(self.npc.movesInfo if isinstance(self.npc, npc.Teachers) else self.npc.items):
+                self.render_text(self.npc.sell(user, int(self.input) - 1))
+            elif self.input == "talk later":
+                self.roam_state()
+
+
         self.output.append("")
 
     def roam_state(self):
         user.state = "roam"
         user.stats["HP"] = user.maxHP
         self.enemy = None
+        self.npc = None
 
     def leave(self):
         for i in user.map.enemies:
@@ -263,6 +289,6 @@ class Main():
                 pass
 
 game = Main("Mygame", 60, (825, 620), 60)
-user = player.Player("Bob", [180, 360], {"HP": 250, "DMG": 50}, map.world, 0,0,0,0)
+user = player.Player("Bob", [180, 360], {"HP": 250, "DMG": 50}, map.world, 0,0,20,20)
 game.run()
 
