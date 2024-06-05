@@ -18,6 +18,10 @@ class Main():
         self.enemy = None
         self.npc = None
         self.menu = "ITEM"
+        self.text_index = 0
+        self.text_delay = 50
+        self.last_update_time = pygame.time.get_ticks()
+        self.lines = 0
 
     def initialise(self):
         pygame.init()
@@ -304,11 +308,23 @@ class Main():
 
         for i in textArray:
             self.output.append(i)
+        self.lines = len(textArray)
 
     def display_output(self):
+        current_time = pygame.time.get_ticks()
         for i in range(18):
             try:
-                text = self.font.render(self.output[-(18 - i)], True, (255, 0, 0) if "  " == self.output[-(18 - i)][0:2] else (0,0,0))
+                if i == 17 and self.lines != 0:
+                    if current_time - self.last_update_time > self.text_delay:
+                        self.last_update_time = current_time
+                        self.text_index += 1
+                        print(self.text_index)
+                    text = self.font.render(self.output[-(18 - i + self.lines)][:self.text_index], True, (255, 0, 0) if "  " == self.output[-(18 - i + self.lines)][0:2] else (0,0,0))
+                    if self.text_index == len(self.output[-(18 - i + self.lines)]):
+                        self.text_index = 0
+                        self.lines -= 1
+                else:    
+                    text = self.font.render(self.output[-(18 - i + self.lines)], True, (255, 0, 0) if "  " == self.output[-(18 - i + self.lines)][0:2] else (0,0,0))
                 rect = text.get_rect()
                 rect.topleft = (470, 30 + 20 * i)
                 self.screen.blit(text, rect)
