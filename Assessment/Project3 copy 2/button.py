@@ -9,7 +9,7 @@ class Button():
         self.rect.topleft = (x, y)
         self.clicked = False
 
-    def draw(self, surface, selected):
+    def draw(self, surface):
         action = False
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
@@ -17,15 +17,9 @@ class Button():
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
                 action = True
-
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
         
         surface.blit(self.image, (self.rect.x, self.rect.y))
-
-        if selected == True:
-            self.image.set_alpha(180)
-        else:
-            self.image.set_alpha(256)
-
+        self.image.set_alpha(256)
         return action

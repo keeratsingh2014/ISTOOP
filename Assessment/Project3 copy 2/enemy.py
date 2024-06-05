@@ -21,55 +21,55 @@ class Enemy():
             self.stats["HP"] -= round((scaling ** 1/2) * (attack["dmg"] * 1/10), 2)
             self.stats["HP"] = 0 if self.stats["HP"] < 0 else self.stats["HP"]
 
-enemy1 = Enemy("CodeReaper", "images\dungeon1enemy1.png", {"HP": 200, "DMG": 40}, 1, (),
+enemy1 = Enemy("CodeReaper", "images/dungeon1enemy1.png", {"HP": 200, "DMG": 40}, 1, (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy2 = Enemy("CodeReaper", "images\dungeon1enemy2.png", {"HP": 350, "DMG": 60}, (3, 4), (),
+enemy2 = Enemy("CodeReaper", "images/dungeon1enemy2.png", {"HP": 350, "DMG": 60}, (3, 4), (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy3 = Enemy("CodeReaper", "images\dungeon1enemy3.png", {"HP": 400, "DMG": 70}, (10, 12), (),
+enemy3 = Enemy("CodeReaper", "images/dungeon1enemy3.png", {"HP": 400, "DMG": 70}, (10, 12), (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy4 = Enemy("NanoStalker", "images\dungeon2enemy1.png", {"HP": 200, "DMG": 40}, 1, (),
+enemy4 = Enemy("NanoStalker", "images/dungeon2enemy1.png", {"HP": 200, "DMG": 40}, 1, (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy5 = Enemy("NanoStalker", "images\dungeon2enemy2.png", {"HP": 350, "DMG": 60}, (3, 4), (),
+enemy5 = Enemy("NanoStalker", "images/dungeon2enemy2.png", {"HP": 350, "DMG": 60}, (3, 4), (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy6 = Enemy("NanoStalker", "images\dungeon2enemy3.png", {"HP": 400, "DMG": 70}, (10, 12), (),
+enemy6 = Enemy("NanoStalker", "images/dungeon2enemy3.png", {"HP": 400, "DMG": 70}, (10, 12), (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy7 = Enemy("DataMage", "images\dungeon3enemy1.png", {"HP": 200, "DMG": 40}, 1, (),
+enemy7 = Enemy("DataMage", "images/dungeon3enemy1.png", {"HP": 200, "DMG": 40}, 1, (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy8 = Enemy("DataMage", "images\dungeon3enemy2.png", {"HP": 350, "DMG": 60}, (3, 4), (),
+enemy8 = Enemy("DataMage", "images/dungeon3enemy2.png", {"HP": 350, "DMG": 60}, (3, 4), (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "ant", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}])
 
-enemy9 = Enemy("DataMage", "images\dungeon3enemy3.png", {"HP": 400, "DMG": 70}, (10, 12), (),
+enemy9 = Enemy("DataMage", "images/dungeon3enemy3.png", {"HP": 400, "DMG": 70}, (10, 12), (),
             [{"name": "shsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": False}, 
             {"name": "megashsuh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 
             {"name": "moh", "dmg": 50, "accuracy": 99, "maxpp": 5, "pp": 5, "speed": 5, "locked": True}, 

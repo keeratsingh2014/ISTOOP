@@ -9,7 +9,7 @@ class Player():
         self.inventory = {"weapon": [item.weapon[0]], "strength": [], "accuracy": [], "health": []}
         self.map = map
         self.level = levels
-        self.exp = None
+        self.exp = 10
         self.sprite = None
         self.souls = souls
         self.coins = coins
@@ -47,10 +47,15 @@ class Player():
         self.location = location
 
     def player_stats(self):
-        pass
+        self.stats["HP"] = (self.stats["HP"])(1.1)**self.level
+        self.stats["DMG"] = (self.stats["DMG"])(1.1)**self.level
 
-    def player_level_up(self):
-        self.level += 1
+    def player_check_level_up(self):
+        if self.exp == 100:
+            self.level += 1
+            self.exp = 0
+
+
 
     def player_inventory_add(self, type, item):
         self.inventory[type].insert(0, item)

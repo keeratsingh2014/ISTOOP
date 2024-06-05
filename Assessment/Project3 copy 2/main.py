@@ -1,4 +1,4 @@
-import pygame, button, player, map, npc, time, random
+import pygame, button, player, map, npc, time, random, time
 from sys import exit
 
 startTime = time.time()
@@ -17,6 +17,7 @@ class Main():
         self.lastCmd = ""
         self.enemy = None
         self.npc = None
+        self.menu = "ITEM"
 
     def initialise(self):
         pygame.init()
@@ -24,7 +25,7 @@ class Main():
         pygame.display.set_caption(self.title)
         self.clock = pygame.time.Clock()
         self.is_running = True
-        self.font = pygame.font.SysFont("alefregular", 20)
+        self.font = pygame.font.Font("Jersey.ttf", 30)
         map.initialise_all()
         print(map.dungeon1.locations == map.dungeon2.locations)
 
@@ -49,7 +50,7 @@ class Main():
             if event.type == pygame.KEYDOWN:
                 if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122 or event.unicode.isnumeric()):
                     self.input += event.unicode if (
-                        self.font.render("  " + self.input + event.unicode, True, (0,0,0)).get_rect().width <= 325) else ""
+                        self.font.render("  " + self.input + event.unicode, True, "white").get_rect().width <= 325) else ""
                 elif event.key == pygame.K_BACKSPACE:
                     self.input = self.input[:-1]
                 elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN) and (self.input != ""):
@@ -60,14 +61,36 @@ class Main():
                     self.input += " " if (self.input != "" and self.input[-1]!= " ") else ""
 
     def update(self):
-        self.screen.blit(self.BG, (0,0))
-        #pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(20, 20, 350, 350))
-        self.screen.blit(self.map, (20, 20)) # map
-        pygame.draw.rect(self.screen, (114, 9, 183), pygame.Rect(20, 460, 785, 140)) # menu/bag
-        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(460, 20, 345, 380)) # prompt space
-        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(460, 400, 345, 40)) # input box
-        #pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((85, 85), (10, 10)))
-        #self.inventory_buttons()
+
+        self.screen.fill((99, 12, 168))
+        self.screen.blit(self.map, (25, 25)) # map
+        self.screen.blit(self.terminal, (470, 25)) # terminal
+        pygame.draw.rect(self.screen, (181, 23, 158), pygame.Rect(25, 470, 775, 160)) # menu/bag
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(39, 484, 132, 132)) # menu/bag (Put player sprite orientation here)
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(185, 484, 132, 59)) # menu/bag (ITEMS)
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(185, 557, 132, 59)) # menu/bag (STATS)
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(724, 484, 59, 59)) # menu/bag (?)
+        pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(724, 557, 59, 59)) # menu/bag (X)
+
+        if self.menu == "ITEM":
+            pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(331, 484, 224, 132)) # menu/bag (WEAPONS)
+            pygame.draw.rect(self.screen, (224, 35, 122), pygame.Rect(555, 484, 155, 132)) # menu/bag (POTIONS)
+
+
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(348, 494, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(417, 494, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(486, 494, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(574, 494, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(643, 494, 52, 52)) # menu/bag (square (deleteable))
+
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(348, 551, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(417, 551, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(486, 551, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(574, 551, 52, 52)) # menu/bag (square (deleteable))
+            pygame.draw.rect(self.screen, (217, 217, 217), pygame.Rect(643, 551, 52, 52)) # menu/bag (square (deleteable))
+        elif self.menu == "STAT":
+            pygame.draw.rect(self.screen, (247, 37, 133), pygame.Rect(331, 484, 379, 132)) # menu/bag (STATS)
+        
         self.typing()
         self.display_output()
 
@@ -88,11 +111,13 @@ class Main():
                     self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
         else:
             pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
-        
+
+        self.menu_buttons()
+
         pygame.display.update()
 
     def typing(self):
-        text = self.font.render(self.input, True, (0,0,0))
+        text = self.font.render(self.input, True, "white")
         rect = text.get_rect()
         rect.topleft =  (470, 406)
         self.screen.blit(text, rect)
@@ -217,7 +242,7 @@ class Main():
 
 
         self.output.append("")
-
+    
     def roam_state(self):
         user.state = "roam"
         user.stats["HP"] = user.maxHP
@@ -237,36 +262,35 @@ class Main():
         self.step = 60
     
     def render(self):
-        self.button1 = pygame.image.load("images/JustBg.png").convert_alpha()
-        self.button2 = pygame.image.load("Images/JustBg.png").convert_alpha()
-        self.button3 = pygame.image.load("images/JustBg.png").convert_alpha()
+        self.buttonEXIT = pygame.image.load("images/EXITBUTTON.png").convert_alpha()
+        self.buttonHELP = pygame.image.load("images/HELPBUTTON.png").convert_alpha()
+        self.buttonSTATS = pygame.image.load("images/STATBUTTON.png").convert_alpha()
+        self.buttonITEMS = pygame.image.load("images/ITEMBUTTON.png").convert_alpha()
+        self.buttonEXIT = button.Button(724, 557, self.buttonEXIT, 1)
+        self.buttonHELP = button.Button(724, 484, self.buttonHELP, 1)
+        self.buttonSTATS = button.Button(185, 557, self.buttonSTATS, 1)
+        self.buttonITEMS = button.Button(185, 484, self.buttonITEMS, 1)
+
         self.BG = pygame.image.load("images/BG.png").convert_alpha()
+        self.terminal = pygame.image.load("images/TERMINAL.png").convert_alpha()
         self.BG = pygame.transform.scale(self.BG, self.dimensions)
         self.map = pygame.image.load(user.map.sprite).convert_alpha()
         self.map = pygame.transform.scale(self.map, (420, 420))
-        self.button1 = button.Button(390, 20, self.button1, 1)
-        self.button2 = button.Button(505, 20, self.button2, 1)
-        self.button3 = button.Button(620, 20, self.button3, 1)
         self.var1 = True
         self.var2 = False
         self.var3 = False
     
-    def inventory_buttons(self):
-        if self.button1.draw(self.screen, self.var1):
-            self.var1 = True
-            self.var2 = False
-            self.var3 = False
-            print("menu1")
-        if self.button2.draw(self.screen, self.var2):
-            self.var2 = True
-            self.var1 = False
-            self.var3 = False
-            print("menu2")
-        if self.button3.draw(self.screen, self.var3):
-            self.var3 = True
-            self.var1 = False
-            self.var2 = False
-            print("menu3")
+        
+    def menu_buttons(self):
+        if self.buttonITEMS.draw(self.screen):
+            self.menu = "ITEM"
+        if self.buttonSTATS.draw(self.screen):
+            self.menu = "STAT"
+        if self.buttonEXIT.draw(self.screen):
+            self.is_running = False
+        if self.buttonHELP.draw(self.screen):
+            pass
+    
 
     def render_text(self, text):
         textArray = text.split(" ")
@@ -291,7 +315,7 @@ class Main():
             except:
                 pass
 
-game = Main("Mygame", 60, (825, 620), 60)
+game = Main("Mygame", 60, (825, 650), 60)
 user = player.Player("Bob", [180, 360], {"HP": 250, "DMG": 50}, map.world, 0,0,20,20)
 game.run()
 
