@@ -24,10 +24,12 @@ class Teachers(Npc):
         return returnValue
     
     def sell(self, player, index):
-        if player.souls >= self.movesInfo[index]["learnCost"]:
+        if player.souls >= self.movesInfo[index]["learnCost"] and self.movesInfo[index]["locked"]:
             player.givemysouls(-self.movesInfo[index]["learnCost"])
             self.movesInfo[index]["locked"] = False
             return f"You have successfully learnt {self.movesInfo[index]["name"].upper()}"
+        elif not self.movesInfo[index]["locked"]:
+            return f"You have successfully learnt {self.movesInfo[index]["name"].upper()}"        
         else:
             return f"You do not have enough souls to learn {self.movesInfo[index]["name"].upper()}"
 
@@ -51,8 +53,8 @@ class Shopkeepers(Npc):
         else:
             return f"You do not have enough coins to purchase {self.items[index]["name"].upper()}"
 
-teacher1 = Teachers("images/playerSprite.png", "Steve", item.weapon[1])
-shop1 = Shopkeepers("images/dungeon3enemy3.png", "John", [item.weapon[1]])
+teacher1 = Teachers("images\playerSprite.png", "Steve", item.weapon[1])
+shop1 = Shopkeepers("images\dungeon3enemy3.png", "John", [item.weapon[1]])
 
 # there are two types of npcs: Teachers and shopkeers,
 # recall that teachers exchange soul currency (given by defeating enemies) for moves and shoopkeepers exchange coins for weapons and items
