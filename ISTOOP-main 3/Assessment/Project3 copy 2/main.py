@@ -14,7 +14,6 @@ class Main():
         self.clock = None
         self.output = []
         self.input = ""
-        self.lastCmd = ""
         self.enemy = None
         self.npc = None
         self.menu = "ITEM"
@@ -54,12 +53,11 @@ class Main():
             if event.type == pygame.KEYDOWN:
                 if len(str(event.unicode)) == 1 and (65 <= ord(event.unicode) <= 90 or 97 <= ord(event.unicode) <= 122 or event.unicode.isnumeric()):
                     self.input += event.unicode if (
-                        self.font.render("  " + self.input + event.unicode, True, "white").get_rect().width <= 325) else ""
+                        self.font.render("   " + self.input + event.unicode, True, "white").get_rect().width <= 325) else ""
                 elif event.key == pygame.K_BACKSPACE:
                     self.input = self.input[:-1]
                 elif (event.key == pygame.K_KP_ENTER) or (event.key == pygame.K_RETURN) and (self.input != ""):
                     self.control()
-                    self.lastCmd = self.input
                     self.input = ""
                 elif event.key == pygame.K_SPACE:
                     self.input += " " if (self.input != "" and self.input[-1]!= " ") else ""
@@ -101,27 +99,27 @@ class Main():
         if user.map != map.world:
             sprite = pygame.image.load("images/playerSprite.png").convert_alpha()
             sprite = pygame.transform.scale(sprite, (120, 120))
-            self.screen.blit(sprite, (user.player_location()[0] + 20 + (self.step - sprite.get_width())/2, user.player_location()[1] + 20 + (self.step - sprite.get_width())/2))
+            self.screen.blit(sprite, (user.player_location()[0] + 25 + (self.step - sprite.get_width())/2, user.player_location()[1] + 25 + (self.step - sprite.get_width())/2))
             for i in user.map.enemies:
                 if i["stage"] == user.map.stage and i["ref"].stats["HP"] != 0:
-                    self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
+                    self.screen.blit(i["sprite"], (i["location"][0] + 25 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 25 + (self.step - i["sprite"].get_width())/2))
             
             for i in user.map.chests:
                 if i["stage"] == user.map.stage and i["ref"].display:
-                    self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
+                    self.screen.blit(i["sprite"], (i["location"][0] + 25 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 25 + (self.step - i["sprite"].get_width())/2))
             
             for i in user.map.npcs:
                 if i["stage"] == user.map.stage:
-                    self.screen.blit(i["sprite"], (i["location"][0] + 20 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 20 + (self.step - i["sprite"].get_width())/2))
+                    self.screen.blit(i["sprite"], (i["location"][0] + 25 + (self.step - i["sprite"].get_width())/2, i["location"][1] + 25 + (self.step - i["sprite"].get_width())/2))
         else:
-            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 20 + (self.step - 10)/2, user.player_location()[1] + 20 + (self.step - 10)/2), (10, 10)))
+            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect((user.player_location()[0] + 25 + (self.step - 10)/2, user.player_location()[1] + 25 + (self.step - 10)/2), (10, 10)))
 
         self.menu_buttons()
 
         pygame.display.update()
 
     def typing(self):
-        text = self.font.render(self.input, True, "white")
+        text = self.font.render(f" {self.input}", True, "white")
         rect = text.get_rect()
         rect.topleft =  (470, 406)
         self.screen.blit(text, rect)
@@ -144,7 +142,7 @@ class Main():
                 self.render_text(f"{i+1}. {user.inventory["weapon"][0]["moves"][i]["name"]}")
 
     def control(self):
-        self.output.append(f"  {self.input}")
+        self.output.append(f" {self.input}")
         
         if user.state == "roam":
             if len(self.input.split()) > 1 and (self.input.split()[0] == "move"):
@@ -286,13 +284,13 @@ class Main():
     
         
     def menu_buttons(self):
-        if self.buttonITEMS.draw(self.screen):
+        if self.buttonITEMS.draw(self.screen, True):
             self.menu = "ITEM"
-        if self.buttonSTATS.draw(self.screen):
+        if self.buttonSTATS.draw(self.screen, True):
             self.menu = "STAT"
-        if self.buttonEXIT.draw(self.screen):
+        if self.buttonEXIT.draw(self.screen, True):
             self.is_running = False
-        if self.buttonHELP.draw(self.screen):
+        if self.buttonHELP.draw(self.screen, True):
             pass
     
 
@@ -300,7 +298,7 @@ class Main():
         textArray = text.split(" ")
         currentIndex = 0
         while currentIndex != len(textArray) - 1:
-            if self.font.render(f"{textArray[currentIndex]} {textArray[currentIndex + 1]}", True, (0,0,0)).get_rect().width <= 325:
+            if self.font.render(f"  {textArray[currentIndex]} {textArray[currentIndex + 1]}", True, (0,0,0)).get_rect().width <= 325:
                 textArray[currentIndex] += f" {textArray[currentIndex + 1]}"
                 textArray.pop(currentIndex + 1)
             else:
@@ -308,25 +306,25 @@ class Main():
 
         for i in textArray:
             self.output.append(i)
-        self.lines = len(textArray)
+        self.lines += len(textArray)
 
     def display_output(self):
         current_time = pygame.time.get_ticks()
-        for i in range(18):
+        for i in range(9):
             try:
-                if i == 17 and self.lines != 0:
+                if i == 8 and self.lines != 0:
                     if current_time - self.last_update_time > self.text_delay:
                         self.last_update_time = current_time
                         self.text_index += 1
                         print(self.text_index)
-                    text = self.font.render(self.output[-(18 - i + self.lines)][:self.text_index], True, (255, 0, 0) if "  " == self.output[-(18 - i + self.lines)][0:2] else (0,0,0))
-                    if self.text_index == len(self.output[-(18 - i + self.lines)]):
+                    text = self.font.render(f" {self.output[-(9 - i + self.lines)][:self.text_index]}", True, (255, 0, 0) if " " == self.output[-(9 - i + self.lines)][0:1] else (0,0,0))
+                    if self.text_index == len(self.output[-(9 - i + self.lines)]):
                         self.text_index = 0
                         self.lines -= 1
                 else:    
-                    text = self.font.render(self.output[-(18 - i + self.lines)], True, (255, 0, 0) if "  " == self.output[-(18 - i + self.lines)][0:2] else (0,0,0))
+                    text = self.font.render(f" {self.output[-(9 - i + self.lines)]}", True, (255, 0, 0) if " " == self.output[-(9 - i + self.lines)][0:1] else (0,0,0))
                 rect = text.get_rect()
-                rect.topleft = (470, 30 + 20 * i)
+                rect.topleft = (470, 30 + 42 * i)
                 self.screen.blit(text, rect)
             except:
                 pass
